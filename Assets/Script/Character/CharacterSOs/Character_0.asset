@@ -17,3 +17,4 @@ MonoBehaviour:
   _defensePower: 100
   _walkSpeed: 3
   _dashSpeed: 10
+  _jumpPower: 5

@@ -4,18 +4,20 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// プレイヤーが操作するキャラクター
 /// </summary>
-public class Player : MonoBehaviour
+public class Player : CharacterBase
 {
     /// <summary>
     /// プレイヤーの使用するInputSystem
     /// </summary>
     public PlayerInputSystem PlayerInputSystem { get; private set; }
 
-    [Header("CharacterSO")] [SerializeField] private CharacterSO _characterSo;
+    [Header("CharacterSO"), SerializeField] private CharacterSO _characterSo;
+    [Header("地面のレイヤー"), SerializeField] private LayerMask _groundLayer;
+    [Header("地面を判定するRayの長さ"), SerializeField] private float _rayDistance;
 
     private Rigidbody _rb;
     private Vector2 _moveInput;
-
+    
     private void Awake()
     {
         PlayerInputSystem = new PlayerInputSystem();
@@ -26,6 +28,7 @@ public class Player : MonoBehaviour
         PlayerInputSystem.Enable();
         PlayerInputSystem.Player.Move.performed += OnMove;
         PlayerInputSystem.Player.Move.canceled += OnMoveCancel;
+        PlayerInputSystem.Player.Jump.performed += OnJump;
     }
 
     private void OnDisable()
@@ -50,7 +53,7 @@ public class Player : MonoBehaviour
             ? _characterSo.DashSpeed
             : _characterSo.WalkSpeed;
         
-        var linearVelocity = new Vector3(_moveInput.x * speed, 0, _moveInput.y * speed);
+        var linearVelocity = new Vector3(_moveInput.x * speed, _rb.linearVelocity.y, _moveInput.y * speed);
         _rb.linearVelocity = linearVelocity;
         DesignatedDirectionRotation(linearVelocity);
     }
@@ -63,6 +66,22 @@ public class Player : MonoBehaviour
     private void OnMoveCancel(InputAction.CallbackContext context)
     {
         _moveInput = Vector2.zero;
+    }
+
+    private void OnJump(InputAction.CallbackContext context)
+    {
+        // 二重ジャンプを防止する
+        if(!context.performed || !GroundCheck()) return;
+        _rb.AddForce(Vector3.up * _characterSo.JumpPower, ForceMode.Impulse);
+    }
+    
+    /// <summary>
+    /// 地面の判定
+    /// </summary>
+    /// <returns>true：地面についてる　false：地面についていない</returns>
+    private bool GroundCheck()
+    {
+        return Physics.Raycast(transform.position, Vector3.down, _rayDistance, _groundLayer);
     }
 
     /// <summary>

@@ -12,6 +12,7 @@ public class CharacterSO : ScriptableObject
     [Header("防御力")] [SerializeField] private int _defensePower;
     [Header("歩き移動速度")] [SerializeField] private float _walkSpeed;
     [Header("走り移動速度")] [SerializeField] private float _dashSpeed;
+    [Header("ジャンプパワー")] [SerializeField] private float _jumpPower;
 
     #region プロパティ
 
@@ -20,6 +21,7 @@ public class CharacterSO : ScriptableObject
     public int DefensePower => _defensePower;
     public float WalkSpeed => _walkSpeed;
     public float DashSpeed => _dashSpeed;
+    public float JumpPower => _jumpPower;
 
     #endregion
 }
