@@ -1206,6 +1206,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerComboSystem
   _characterSo: {fileID: 11400000, guid: 14357a1464879a44e8397cd26c8e0b27, type: 2}
   _player: {fileID: 1842109242}
+  _combatActions:
+  - {fileID: 11400000, guid: b06142ef776aa9c4dbcbd02c5c4473ca, type: 2}
   _detectionRange: {x: 3, y: 2, z: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
