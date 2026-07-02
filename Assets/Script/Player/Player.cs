@@ -15,12 +15,14 @@ public class Player : CharacterBase
     [Header("地面のレイヤー"), SerializeField] private LayerMask _groundLayer;
     [Header("地面を判定するRayの長さ"), SerializeField] private float _rayDistance;
 
+    private Camera _mainCamera;
     private Rigidbody _rb;
     private Vector2 _moveInput;
     
     private void Awake()
     {
         PlayerInputSystem = new PlayerInputSystem();
+        _mainCamera = Camera.main;
     }
 
     private void OnEnable()
@@ -53,7 +55,13 @@ public class Player : CharacterBase
             ? _characterSo.DashSpeed
             : _characterSo.WalkSpeed;
         
-        var linearVelocity = new Vector3(_moveInput.x * speed, _rb.linearVelocity.y, _moveInput.y * speed);
+        // カメラの前と右を取得
+        var forward = _mainCamera.transform.forward;
+        var right = _mainCamera.transform.right;
+        // カメラを考慮した、移動方向を作成
+        var move = (_moveInput.x * right + _moveInput.y * forward).normalized;
+        
+        var linearVelocity = new Vector3(move.x * speed, _rb.linearVelocity.y, move.z * speed);
         _rb.linearVelocity = linearVelocity;
         DesignatedDirectionRotation(linearVelocity);
     }
