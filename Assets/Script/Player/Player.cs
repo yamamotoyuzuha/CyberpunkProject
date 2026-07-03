@@ -14,15 +14,26 @@ public class Player : CharacterBase
     [Header("CharacterSO"), SerializeField] private CharacterSO _characterSo;
     [Header("地面のレイヤー"), SerializeField] private LayerMask _groundLayer;
     [Header("地面を判定するRayの長さ"), SerializeField] private float _rayDistance;
-
+    
     private Camera _mainCamera;
     private Rigidbody _rb;
+    
+    /// <summary>
+    /// キャラクターのステータス
+    /// </summary>
+    private CharacterStatus _characterStatus;
+    /// <summary>
+    /// プレイヤーの入力
+    /// </summary>
     private Vector2 _moveInput;
     
     private void Awake()
     {
         PlayerInputSystem = new PlayerInputSystem();
         _mainCamera = Camera.main;
+
+        // キャラクターのステータスを作成
+        _characterStatus = new CharacterStatus(_characterSo.Hp, _characterSo.Stamina);
     }
 
     private void OnEnable()
@@ -48,6 +59,9 @@ public class Player : CharacterBase
         PlayerMove();
     }
 
+    /// <summary>
+    /// プレイヤーの移動
+    /// </summary>
     private void PlayerMove()
     {
         // ダッシュボタンが押されている場合、走り速度を使用する
