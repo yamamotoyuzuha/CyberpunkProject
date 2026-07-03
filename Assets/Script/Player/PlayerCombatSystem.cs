@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 /// <summary>
 /// プレイヤーの攻撃を管理するクラス
@@ -11,14 +12,13 @@ public class PlayerCombatSystem : MonoBehaviour
     [Header("プレイヤーの戦闘アクション"), SerializeField] private List<CombatActionBase> _combatActions;
     [Header("検出範囲の設定"), SerializeField] private Vector3 _detectionRange;
 
-    private CombatPhaseManagement _combatPhaseManagement;
-    private CombatActionPhase _actionPhase;
+    private CombatExecutorManagement _combatExecutorManagement;
+    private CombatSystemContext _combatSystemContext;
     
-    private GameObject _closestEnemy; // 一番近いEnemy
-
     private void Awake()
     {
-        _combatPhaseManagement = new CombatPhaseManagement(_combatActions);
+        _combatExecutorManagement = new CombatExecutorManagement(_combatActions);
+        _combatSystemContext = new CombatSystemContext(this, gameObject);
     }
     
     private void Start()
@@ -33,36 +33,23 @@ public class PlayerCombatSystem : MonoBehaviour
 
     private void PlayerAttackInput()
     {
-        // TODO：これだと、処理が面倒だからプレイヤーはTickを行うだけで済むようにするのが理想
-        // TODO：ここで各戦闘アクションが行えるか判定を行い、発動させる
-        /*
-        foreach (var action in _combatActions)
-        {
-            if (action.IsPlayerInputAction(_player.PlayerInputSystem))
-            {
-                var phase = CombatActionPhase.ActionPhase.Start;
-                _actionPhase = new CombatActionPhase(phase, action);
-            }
-        }
-        
-        if(_actionPhase != null) _actionPhase.Action.PhaseUpdate(_actionPhase);
-        */
-        
-        _combatPhaseManagement.TryAction(_player.PlayerInputSystem);
-        _combatPhaseManagement.Tick();
+        _combatExecutorManagement.TryAction(_player.PlayerInputSystem, _combatSystemContext);
+        _combatExecutorManagement.Tick();
     }
-
+    
     /// <summary>
-    /// 一番近い敵を取得する
+    /// ダメージを与える周辺のキャラクターを取得する
     /// </summary>
-    private void GetClosestEnemy()
+    /// <param name="count">攻撃対象人数</param>
+    /// <returns>範囲内かつ、攻撃対象人数分のキャラクター</returns>
+    public GameObject[] GetTakeDamageCharacter(int count)
     {
         // 自身の位置から検出範囲のコライダーを取得
         Collider[] enemys = Physics.OverlapBox(transform.position, _detectionRange, transform.rotation);
-        if(enemys.Length == 0) return;
+        if(enemys.Length == 0) return null;
 
-        GameObject closestEnemy = null;
-        float closestDistance = Mathf.Infinity;
+        List<GameObject> damageable = new List<GameObject>();
+        float closestDistance = 10f; // TODO：ここマジックナンバーになってるから変数に変更を行う
         foreach (var enemy in enemys)
         {
             // Enemy以外は判定を行わない
@@ -72,29 +59,33 @@ public class PlayerCombatSystem : MonoBehaviour
             var distance = Vector3.Distance(transform.position, enemy.transform.position);
             if (distance < closestDistance)
             {
-                closestEnemy = enemy.gameObject;
-                closestDistance = distance;
+                damageable.Add(enemy.gameObject);
             }
+            
+            if(damageable.Count == count) break;
         }
 
-        // 一番近い敵を設定
-        _closestEnemy = closestEnemy;
+        return damageable.ToArray();
     }
 
     /// <summary>
     /// 一番近い敵の方向へ向く
     /// </summary>
-    private void DirectionClosestEnemy()
+    /// <param name="character">ダメージを与えるキャラクター</param>
+    public void DirectionClosestTakeDamageCharacter(GameObject[] character)
     {
-        // 一番近い敵がいない場合、処理を行わない
-        if(_closestEnemy == null) return;
+        if(character.Length == 0) return;
         
+        // 自身から敵までの距離を求めて、近い順にソートしていく
+        var chara = character.ToList();
+        chara.OrderBy(x => Vector3.Distance(transform.position, x.transform.position));
+
         // 一番近い敵の方向を取得
-        var direction = (_closestEnemy.transform.position - transform.position).normalized;
+        var direction = (chara[0].transform.position - transform.position).normalized;
         direction.y = 0;
         _player.DesignatedDirectionRotation(direction);
     }
-
+    
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
