@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// プレイヤーが操作するキャラクター
 /// </summary>
-public class Player : CharacterBase
+public class Player : CharacterBase, ICharacterAnimator
 {
     /// <summary>
     /// プレイヤーの使用するInputSystem
@@ -14,9 +14,13 @@ public class Player : CharacterBase
     [Header("CharacterSO"), SerializeField] private CharacterSO _characterSo;
     [Header("地面のレイヤー"), SerializeField] private LayerMask _groundLayer;
     [Header("地面を判定するRayの長さ"), SerializeField] private float _rayDistance;
+    [Header("アニメーションの設定")]
+    [SerializeField] private float _walkBlendValue = 0.5f;
+    [SerializeField] private float _dashBlendValue = 1f;
     
     private Camera _mainCamera;
     private Rigidbody _rb;
+    private Animator _animator;
     
     /// <summary>
     /// キャラクターのステータス
@@ -26,6 +30,11 @@ public class Player : CharacterBase
     /// プレイヤーの入力
     /// </summary>
     private Vector2 _moveInput;
+
+    /// <summary>
+    /// 移動アニメーションのBlend値
+    /// </summary>
+    private float _moveBlendValue;
     
     private void Awake()
     {
@@ -52,6 +61,7 @@ public class Player : CharacterBase
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
+        _animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -65,9 +75,9 @@ public class Player : CharacterBase
     private void PlayerMove()
     {
         // ダッシュボタンが押されている場合、走り速度を使用する
-        float speed = PlayerInputSystem.Player.Dash.IsPressed()
-            ? _characterSo.DashSpeed
-            : _characterSo.WalkSpeed;
+        (float moveSpeed, bool isWalking) movement = PlayerInputSystem.Player.Dash.IsPressed()
+            ? (_characterSo.DashSpeed, false)
+            : (_characterSo.WalkSpeed, true);
         
         // カメラの前と右を取得
         var forward = _mainCamera.transform.forward;
@@ -75,9 +85,19 @@ public class Player : CharacterBase
         // カメラを考慮した、移動方向を作成
         var move = (_moveInput.x * right + _moveInput.y * forward).normalized;
         
-        var linearVelocity = new Vector3(move.x * speed, _rb.linearVelocity.y, move.z * speed);
+        var linearVelocity = new Vector3(move.x * movement.moveSpeed, _rb.linearVelocity.y, move.z * movement.moveSpeed);
         _rb.linearVelocity = linearVelocity;
         DesignatedDirectionRotation(linearVelocity);
+
+        // 移動状態に応じて、移動アニメーション用のパラメータを設定する
+        if (move == Vector3.zero) _moveBlendValue = 0;
+        else _moveBlendValue = movement.isWalking ? _walkBlendValue : _dashBlendValue;
+        SetMoveAnimation(_moveBlendValue, movement.isWalking);
+    }
+
+    public void SetMoveAnimation(float moveParam, bool isFlag)
+    {
+        _animator.SetFloat("Move", moveParam);
     }
 
     private void OnMove(InputAction.CallbackContext context)
