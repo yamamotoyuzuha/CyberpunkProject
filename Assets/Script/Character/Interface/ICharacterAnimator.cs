@@ -20,4 +20,11 @@ public interface ICharacterAnimator
     /// </summary>
     /// <param name="animationName">アニメーターのパラメータ名</param>
     void TriggerAnimation(string animationName);
+    
+    /// <summary>
+    /// アニメーションを再生中か判定する
+    /// </summary>
+    /// <param name="animationTag">判定するアニメーションのTag</param>
+    /// <returns>true：再生中　false：再生中ではない</returns>
+    bool IsAnimationPlaying(string animationTag);
 }

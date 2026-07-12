@@ -32,6 +32,12 @@ public class CharacterAnimationController : MonoBehaviour, ICharacterAnimator
         _animator.SetTrigger(animationName);
     }
 
+    public bool IsAnimationPlaying(string animationTag)
+    {
+        var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+        return stateInfo.IsTag(animationTag);
+    }
+
     /// <summary>
     /// ジャンプアニメーション
     /// </summary>
