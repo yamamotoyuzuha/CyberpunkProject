@@ -4050,6 +4050,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f9e45a278a9d1541b52197754c04e4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  _player: {fileID: 4698822587844685873}
   _playerInputHandler: {fileID: 8324306086097282129}
   _animController: {fileID: 8324306086097282130}
   _walkSpeed: 3
