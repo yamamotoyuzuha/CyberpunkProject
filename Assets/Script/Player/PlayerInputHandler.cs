@@ -23,11 +23,6 @@ public class PlayerInputHandler : MonoBehaviour
     /// true：ダッシュした　false：ダッシュしていない
     /// </summary>
     public bool IsDashInput { get; private set; }
-    /// <summary>
-    /// ジャンプの入力
-    /// true：入力あり　false：入力なし
-    /// </summary>
-    public bool IsJumpInput { get; private set; }
 
     private void Awake()
     {
