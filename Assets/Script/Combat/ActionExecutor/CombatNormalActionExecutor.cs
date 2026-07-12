@@ -9,30 +9,75 @@ public class CombatNormalActionExecutor : CombatActionExecutor
     public CombatNormalActionExecutor(CombatSystemContext combatSystemContext, CombatActionBase actionBase) 
         : base(combatSystemContext, actionBase){}
 
+    protected override void Initialization() => base.Initialization();
+    
     protected override void OnStart()
     {
         Debug.Log("Normal Start");
-        Debug.Log(Context.Character.name);
         
-        // TODO：攻撃対象のキャラクターを取得するのと、プレイヤーの向きをその方向へと向ける
+        // 攻撃対象のキャラクターを取得し、プレイヤーの向きをその方向へと向ける
         TakeDamageCharacter = Context.CombatSystem.GetTakeDamageCharacter(CombatActionBase.AttackCount);
         Context.CombatSystem.DirectionClosestTakeDamageCharacter(TakeDamageCharacter);
+        
+        // 移動を不可能にする
+        Context.Player.PlayerState.SetCanMove(false);
+        // アニメーションの再生を行う
+        var info = CombatActionBase.GetActionInfo(Index);
+        PlayAnimation(info);
     }
 
     protected override void OnUpdate()
     {
-        Debug.Log("Normal Update");
-
-        // TODO：ここで仮にダメージを与えるキャラクターを出力する
-        // TODO：ここでダメージを与える
-        foreach (var chara in TakeDamageCharacter)
+        Timer += Time.deltaTime;
+        if (Timer <= ActionInfo.InputReservationTime) // 入力予約受け付け時間内か判定
         {
-            Debug.Log(chara.name);
+            if (Context.InputSystem.Player.Attack.triggered)
+            {
+                InputReservation = true;
+                Debug.LogWarning("入力予約を受け付けました。");
+            }
+        }
+
+        // コンボ攻撃の受け付け時間に入力があったら、次の攻撃に移る
+        if (Timer >= ActionInfo.StartInputReceptionTime && Timer <= ActionInfo.EndInputReceptionTime)
+        {
+            if (InputReservation || Context.InputSystem.Player.Attack.triggered)
+            {
+                NextAttack();
+            }
+        }
+        
+        // 現在の攻撃アニメーションが終了したら、攻撃を終了する
+        if (Timer >= ActionInfo.EndTime)
+        {
+            CurrentPhase = Phase.End;
         }
     }
     
     protected override void OnEnd()
     {
         Debug.Log("Normal End");
+        // 移動を可能にする
+        Context.Player.PlayerState.SetCanMove(true);
+    }
+
+    /// <summary>
+    /// 次の攻撃へと移行する
+    /// </summary>
+    private void NextAttack()
+    {
+        Index++;
+        
+        // 攻撃アニメーションの情報を取得
+        var info = CombatActionBase.GetActionInfo(Index);
+        if (info == null) // もし、取得出来なかった場合は攻撃を終了する
+        {
+            CurrentPhase = Phase.End;
+            return;
+        }
+        
+        PlayAnimation(info);
+        Timer = 0;
+        InputReservation = false;
     }
 }

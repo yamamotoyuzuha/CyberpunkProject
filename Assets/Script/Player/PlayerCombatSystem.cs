@@ -8,22 +8,24 @@ using System.Linq;
 public class PlayerCombatSystem : MonoBehaviour
 {
     [Header("CharacterSO"), SerializeField] private CharacterSO _characterSo;
-    [Header("Player"), SerializeField] private Player _player;
+    [Header("PlayerInputHandler"), SerializeField] private PlayerInputHandler _inputHandler;
+    [Header("PlayerMovement"), SerializeField] private PlayerMovement _playerMovement;
     [Header("プレイヤーの戦闘アクション"), SerializeField] private List<CombatActionBase> _combatActions;
     [Header("検出範囲の設定"), SerializeField] private Vector3 _detectionRange;
-
+    [Header("検出距離"), SerializeField] private float _closestDistance = 10f;
+        
     private CombatExecutorManagement _combatExecutorManagement;
     private CombatSystemContext _combatSystemContext;
     
     private void Awake()
     {
         _combatExecutorManagement = new CombatExecutorManagement(_combatActions);
-        _combatSystemContext = new CombatSystemContext(this, gameObject);
     }
     
     private void Start()
     {
-        
+        _combatSystemContext = new CombatSystemContext(this, GetComponent<Player>(),
+            _inputHandler.PlayerInputSystem, GetComponent<ICharacterAnimator>());
     }
 
     private void Update()
@@ -33,7 +35,7 @@ public class PlayerCombatSystem : MonoBehaviour
 
     private void PlayerAttackInput()
     {
-        _combatExecutorManagement.TryAction(_player.PlayerInputSystem, _combatSystemContext);
+        _combatExecutorManagement.TryAction(_inputHandler.PlayerInputSystem, _combatSystemContext);
         _combatExecutorManagement.Tick();
     }
     
@@ -49,15 +51,14 @@ public class PlayerCombatSystem : MonoBehaviour
         if(enemys.Length == 0) return null;
 
         List<GameObject> damageable = new List<GameObject>();
-        float closestDistance = 10f; // TODO：ここマジックナンバーになってるから変数に変更を行う
         foreach (var enemy in enemys)
         {
             // Enemy以外は判定を行わない
             if (!enemy.CompareTag("Enemy")) continue;
             
-            // 自身から敵までの距離を求めて、一番近い敵を更新していく
+            // 自身から敵までの距離を求めて、検出距離の場合のみ追加していく
             var distance = Vector3.Distance(transform.position, enemy.transform.position);
-            if (distance < closestDistance)
+            if (distance < _closestDistance)
             {
                 damageable.Add(enemy.gameObject);
             }
@@ -77,13 +78,13 @@ public class PlayerCombatSystem : MonoBehaviour
         if(character.Length == 0) return;
         
         // 自身から敵までの距離を求めて、近い順にソートしていく
-        var chara = character.ToList();
-        chara.OrderBy(x => Vector3.Distance(transform.position, x.transform.position));
+        var chara = character.OrderBy(x => 
+            Vector3.Distance(transform.position, x.transform.position)).ToList();
 
         // 一番近い敵の方向を取得
         var direction = (chara[0].transform.position - transform.position).normalized;
         direction.y = 0;
-        _player.DesignatedDirectionRotation(direction);
+        _playerMovement.DesignatedDirectionRotation(direction);
     }
     
     private void OnDrawGizmos()

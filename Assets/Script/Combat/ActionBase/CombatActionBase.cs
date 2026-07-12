@@ -1,4 +1,6 @@
 using UnityEngine;
+using System;
+using System.Collections.Generic;
 
 /// <summary>
 /// 各戦闘アクションの基底クラス（ScriptableObject）
@@ -6,19 +8,22 @@ using UnityEngine;
 /// </summary>
 public abstract class CombatActionBase : ScriptableObject
 {
-    [Header("入力のクールダウンタイム"), SerializeField] protected float _cooldownTime;
-    [Header("攻撃対象人数"), SerializeField] protected int _attackCount;
-
+    [Header("アニメーターのパラメータ名"), SerializeField] private ActionAnimParameter _actionAnimParameter;
+    [Header("攻撃情報"), SerializeField] private List<ActionInfoBase> _actionInfos;
+    [Header("攻撃対象人数"), SerializeField] private int _attackCount;
+    
+    /// <summary>
+    /// アニメーターのパラメータ名
+    /// </summary>
+    public ActionAnimParameter AnimParameter => _actionAnimParameter;
+    /// <summary>
+    /// 攻撃情報
+    /// </summary>
+    public List<ActionInfoBase> ActionInfos => _actionInfos;
     /// <summary>
     /// 攻撃対象人数
     /// </summary>
     public int AttackCount => _attackCount;
-
-
-    // TODO：各戦闘アクションにフェーズを持たせて、コンボ攻撃を行えるようにする
-    // TODO：設計を考えておく
-    
-    // TODO：ここはあくまで、基底クラスであり派生先で使用する関数のみ記述する
 
     /// <summary>
     /// この戦闘アクションを実行するためのCombatActionExecutorを生成する
@@ -33,4 +38,29 @@ public abstract class CombatActionBase : ScriptableObject
     /// <param name="inputSystem">プレイヤーのInputSystem</param>
     /// <returns>true：入力をした　false：入力をしていない</returns>
     public abstract bool IsPlayerInputAction(PlayerInputSystem inputSystem);
+
+    /// <summary>
+    /// indexに応じた攻撃情報を取得する
+    /// </summary>
+    /// <param name="index">インデックス</param>
+    /// <returns>攻撃情報を返す</returns>
+    public ActionInfoBase GetActionInfo(int index)
+    {
+        if(_actionInfos.Count == 0) return null;
+
+        var loopIndex = index % _actionInfos.Count;
+        return _actionInfos[loopIndex];
+    }
+}
+
+/// <summary>
+/// アニメーターのパラメータ名
+/// </summary>
+[Serializable]
+public class ActionAnimParameter
+{
+    [Header("アニメーターのパラメータ名（Trigger）"), SerializeField] private string _parameterTriggerName;
+    [Header("アニメーターのパラメータ名（float）"), SerializeField] private string _parameterFloatName;
+    public string ParameterTriggerName => _parameterTriggerName;
+    public string ParameterFloatName => _parameterFloatName;
 }

@@ -1,4 +1,3 @@
-using UnityEngine;
 
 /// <summary>
 /// CombatActionExecutor（戦闘アクションの実行基底クラス）に対して
@@ -7,17 +6,27 @@ using UnityEngine;
 public class CombatSystemContext
 {
     /// <summary>
-    /// 戦闘システム
+    /// 戦闘アクションを行ったキャラクター
+    /// </summary>
+    public Player Player { get; private set; }
+    /// <summary>
+    /// プレイヤーの戦闘システム
     /// </summary>
     public PlayerCombatSystem CombatSystem { get; private set; }
     /// <summary>
-    /// 戦闘アクションを実行しているキャラクター
+    /// プレイヤーの入力情報
     /// </summary>
-    public GameObject Character { get; private set; }
+    public PlayerInputSystem InputSystem { get; private set; }
+    /// <summary>
+    /// キャラクターのアニメーション制御を行うインターフェース
+    /// </summary>
+    public ICharacterAnimator CharacterAnimator { get; private set; }
 
-    public CombatSystemContext(PlayerCombatSystem combatSystem, GameObject character)
+    public CombatSystemContext(PlayerCombatSystem combatSystem, Player player, PlayerInputSystem inputSystem, ICharacterAnimator characterAnimator)
     {
         CombatSystem = combatSystem;
-        Character = character;
+        Player = player;
+        InputSystem = inputSystem;
+        CharacterAnimator = characterAnimator;
     }
 }

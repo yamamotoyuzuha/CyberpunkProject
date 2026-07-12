@@ -12,5 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67d3b26c363045e4cbcb66e0ac7d7e03, type: 3}
   m_Name: CombatNormalAction_0
   m_EditorClassIdentifier: Assembly-CSharp::CombatNormalAction
-  _cooldownTime: 0
+  _actionAnimParameter:
+    _parameterTriggerName: NormalAttack
+    _parameterFloatName: NAttackParameter
+  _actionInfos:
+  - _animationClip: {fileID: -203655887218126122, guid: 5bc9885375bd8ff41bb5a3df4586f8a2, type: 3}
+    _animParameter: 0
+    _startInputReceptionTime: 0.5
+    _endInputReceptionTime: 0.9
+    _inputReservationTime: 0.3
+  - _animationClip: {fileID: -203655887218126122, guid: 7f77cec71207f6c4681f8d3e8b205a47, type: 3}
+    _animParameter: 1
+    _startInputReceptionTime: 0.6
+    _endInputReceptionTime: 0.9
+    _inputReservationTime: 0.4
+  - _animationClip: {fileID: -203655887218126122, guid: 349f86de4520c7e43af40d819f8853c9, type: 3}
+    _animParameter: 2
+    _startInputReceptionTime: 0.6
+    _endInputReceptionTime: 0.9
+    _inputReservationTime: 0.5
   _attackCount: 3

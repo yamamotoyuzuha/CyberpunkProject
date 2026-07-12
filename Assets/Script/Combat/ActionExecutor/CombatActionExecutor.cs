@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -27,13 +26,13 @@ public abstract class CombatActionExecutor
     protected Phase CurrentPhase;
 
     /// <summary>
-    /// 実装する戦闘アクション
+    /// 実行する戦闘アクション
     /// </summary>
-    protected CombatActionBase CombatActionBase;
+    protected readonly CombatActionBase CombatActionBase;
     /// <summary>
     /// 戦闘アクションに必要な情報
     /// </summary>
-    protected CombatSystemContext Context;
+    protected readonly CombatSystemContext Context;
 
     /// <summary>
     /// ダメージを与えるキャラクターを保持する
@@ -41,10 +40,28 @@ public abstract class CombatActionExecutor
     protected GameObject[] TakeDamageCharacter;
     
     /// <summary>
+    /// 攻撃アニメーションの情報
+    /// </summary>
+    protected ActionInfoBase ActionInfo;
+    /// <summary>
+    /// 現在の攻撃アニメーションのインデックス
+    /// </summary>
+    protected int Index;
+    /// <summary>
+    /// 攻撃入力タイマー
+    /// </summary>
+    protected float Timer;
+    /// <summary>
+    /// 入力予約
+    /// <para>true:入力予約あり　false：入力予約なし</para>
+    /// </summary>
+    protected bool InputReservation;
+    
+    /// <summary>
     /// 戦闘アクションが終了したか
     /// </summary>
     public bool IsFinished => CurrentPhase == Phase.Finished;
-
+    
     protected CombatActionExecutor(CombatSystemContext combatSystem, CombatActionBase actionBase)
     {
         CurrentPhase = Phase.Start;
@@ -60,13 +77,13 @@ public abstract class CombatActionExecutor
         switch (CurrentPhase)
         {
             case Phase.Start:
+                Initialization();
                 OnStart();
                 CurrentPhase = Phase.Update;
                 break;
             
             case Phase.Update:
                 OnUpdate();
-                CurrentPhase = Phase.End;
                 break;
             
             case Phase.End:
@@ -74,6 +91,26 @@ public abstract class CombatActionExecutor
                 CurrentPhase = Phase.Finished;
                 break;
         }
+    }
+
+    /// <summary>
+    /// 攻撃アニメーターを再生する
+    /// </summary>
+    /// <param name="actionInfo">攻撃アニメーションの情報</param>
+    protected void PlayAnimation(ActionInfoBase actionInfo)
+    {
+        ActionInfo = actionInfo;
+        Context.CharacterAnimator.PlayAttackAnimation(CombatActionBase.AnimParameter, actionInfo);
+    }
+
+    /// <summary>
+    /// 初期化
+    /// </summary>
+    protected virtual void Initialization()
+    {
+        Index = 0;
+        Timer = 0;
+        InputReservation = false;
     }
     
     /// <summary>
