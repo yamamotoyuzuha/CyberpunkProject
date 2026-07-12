@@ -11,10 +11,16 @@ public class Player : CharacterBase
     /// キャラクターのステータス
     /// </summary>
     private CharacterStatus _characterStatus;
-    
+
+    /// <summary>
+    /// プレイヤーの状態
+    /// </summary>
+    public PlayerState PlayerState { get; private set; }
+
     private void Awake()
     {
         // キャラクターのステータスを作成
         _characterStatus = new CharacterStatus(_characterSo.Hp, _characterSo.Stamina);
+        PlayerState = new PlayerState();
     }
 }

@@ -6,6 +6,7 @@ using UnityEngine;
 /// </summary>
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Player"), SerializeField] private Player _player;
     [Header("PlayerInputHandler"), SerializeField] private PlayerInputHandler _playerInputHandler;
     [Header("CharacterAnimationController"), SerializeField] private CharacterAnimationController _animController;
     [Header("歩き速度"), SerializeField] private float _walkSpeed = 3f;
@@ -56,6 +57,14 @@ public class PlayerMovement : MonoBehaviour
     /// </summary>
     private void Move()
     {
+        if (!_player.PlayerState.CanMove)
+        {
+            _moveBlendValue = 0;
+            _rb.linearVelocity = new Vector3(0, _rb.linearVelocity.y, 0);
+            _animController.SetMoveAnimation(0, true);
+            return;
+        }
+        
         // ダッシュボタンが押されている場合、走り速度を使用する
         (float moveSpeed, bool isWalking) movement = _playerInputHandler.IsDashInput
             ? (_dashSpeed, false) : (_walkSpeed, true);
