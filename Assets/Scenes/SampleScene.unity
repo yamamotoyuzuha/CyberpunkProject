@@ -1208,10 +1208,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
   _characterSo: {fileID: 11400000, guid: 14357a1464879a44e8397cd26c8e0b27, type: 2}
-  _groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  _rayDistance: 1.1
 --- !u!54 &1842109243
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1352,10 +1348,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerComboSystem
   _characterSo: {fileID: 11400000, guid: 14357a1464879a44e8397cd26c8e0b27, type: 2}
-  _player: {fileID: 1842109242}
+  _inputHandler: {fileID: 0}
+  _playerMovement: {fileID: 0}
   _combatActions:
   - {fileID: 11400000, guid: b06142ef776aa9c4dbcbd02c5c4473ca, type: 2}
   _detectionRange: {x: 3, y: 2, z: 3}
+  _closestDistance: 0
 --- !u!4 &74895281005208047
 Transform:
   m_ObjectHideFlags: 0
@@ -2941,10 +2939,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
   _characterSo: {fileID: 11400000, guid: 14357a1464879a44e8397cd26c8e0b27, type: 2}
-  _groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  _rayDistance: 1.1
 --- !u!1 &4724966993264181428
 GameObject:
   m_ObjectHideFlags: 0
@@ -4013,7 +4007,11 @@ GameObject:
   - component: {fileID: 1856506546906618684}
   - component: {fileID: 3083228042559708244}
   - component: {fileID: 3183225648507474014}
+  - component: {fileID: 8324306086097282129}
   - component: {fileID: 4698822587844685873}
+  - component: {fileID: 8324306086097282128}
+  - component: {fileID: 8324306086097282127}
+  - component: {fileID: 8324306086097282130}
   m_Layer: 0
   m_Name: Kachujin G Rosales
   m_TagString: Untagged
@@ -4021,6 +4019,74 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8324306086097282127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8324306086097282126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 301b50b16681105479dcf2cf18df2689, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCombatSystem
+  _characterSo: {fileID: 11400000, guid: 14357a1464879a44e8397cd26c8e0b27, type: 2}
+  _inputHandler: {fileID: 8324306086097282129}
+  _playerMovement: {fileID: 8324306086097282128}
+  _combatActions:
+  - {fileID: 11400000, guid: b06142ef776aa9c4dbcbd02c5c4473ca, type: 2}
+  _detectionRange: {x: 3, y: 1, z: 3}
+  _closestDistance: 10
+--- !u!114 &8324306086097282128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8324306086097282126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f9e45a278a9d1541b52197754c04e4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  _playerInputHandler: {fileID: 8324306086097282129}
+  _animController: {fileID: 8324306086097282130}
+  _walkSpeed: 3
+  _dashSpeed: 10
+  _jumpSpeed: 5
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  _rayDistance: 1.1
+  _walkBlendValue: 0.5
+  _dashBlendValue: 1
+--- !u!114 &8324306086097282129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8324306086097282126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a0bad36f2e192647b243a3ac73766ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputHandler
+--- !u!114 &8324306086097282130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8324306086097282126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff9fe145b9555864ca3ad5382920f413, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterAnimationController
+  _moveAnimationName: Move
+  _jumpParameter: Jump
 --- !u!4 &8350030472892776702
 Transform:
   m_ObjectHideFlags: 0
