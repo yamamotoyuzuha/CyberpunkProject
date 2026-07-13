@@ -115,6 +115,7 @@ public abstract class CombatActionExecutor
     {
         // 攻撃対象を取得
         var targets = Context.CombatSystem.GetAttackTarget(CombatActionBase.AttackCount);
+        Context.CombatSystem.DirectionClosestEnemy(targets);
         if (targets == null) return;
 
         foreach (var target in targets)

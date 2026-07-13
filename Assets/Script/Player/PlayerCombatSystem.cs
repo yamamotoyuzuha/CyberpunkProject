@@ -100,7 +100,7 @@ public class PlayerCombatSystem : MonoBehaviour
         var targetDirection = (target.transform.position - transform.position).normalized;
         targetDirection.y = 0;
         _playerMovement.DesignatedDirectionRotation(targetDirection);
-        _playerMovement.StartAttackMovement(targetDirection);
+        _playerMovement.StartAttackMovement(target.transform.position);
     }
     
     /// <summary>

@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("歩き速度"), SerializeField] private float _walkSpeed = 3f;
     [Header("走り速度"), SerializeField] private float _dashSpeed = 10f;
     [Header("ジャンプ速度"), SerializeField] private float _jumpSpeed = 5f;
+    [Header("攻撃移動時の停止距離"), SerializeField] private float _attackMovementStopDistance = 1f;
     [Header("攻撃時の移動速度"), SerializeField] private float _attackMovementSpeed = 15f;
     [Header("地面のレイヤー"), SerializeField] private LayerMask _groundLayer;
     [Header("地面を判定するRayの長さ"), SerializeField] private float _rayDistance;
@@ -26,9 +27,13 @@ public class PlayerMovement : MonoBehaviour
     /// 移動アニメーションのBlend値
     /// </summary>
     private float _moveBlendValue;
-    
+
+    #region 攻撃時の移動関連
+
+    private Vector3 _attackTargetPosition;
     private bool _isAttackMoving;
-    private Vector3 _attackDirection;
+
+    #endregion
 
     private void Start()
     {
@@ -63,14 +68,9 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!_player.PlayerState.CanMove)
         {
-            if (_isAttackMoving) // 攻撃の踏み込むがある場合
+            if (_isAttackMoving) // 攻撃の踏み込みがある場合
             {
-                // 攻撃方向へ移動する
-                _rb.linearVelocity = new Vector3(
-                    _attackDirection.x * _attackMovementSpeed,
-                    _rb.linearVelocity.y,
-                    _attackDirection.z * _attackMovementSpeed
-                );
+                AttackMove();
             }
             else
             {
@@ -81,6 +81,7 @@ public class PlayerMovement : MonoBehaviour
                     0
                 );
             }
+            
             _moveBlendValue = 0;
             _animController.SetMoveAnimation(0, true);
             return;
@@ -104,6 +105,20 @@ public class PlayerMovement : MonoBehaviour
         if (move == Vector3.zero) _moveBlendValue = 0;
         else _moveBlendValue = movement.isWalking ? _walkBlendValue : _dashBlendValue;
         _animController.SetMoveAnimation(_moveBlendValue, movement.isWalking);
+    }
+
+    /// <summary>
+    /// 攻撃時の移動処理
+    /// </summary>
+    private void AttackMove()
+    {
+        // 攻撃対象まで一定距離以内だったら処理を行わない
+        if (Vector3.Distance(transform.position, _attackTargetPosition) < _attackMovementStopDistance) return;
+
+        _attackTargetPosition.y = transform.position.y;
+        // 現在位置から攻撃対象位置まで移動
+        transform.position = Vector3.MoveTowards(transform.position, _attackTargetPosition, 
+            _attackMovementSpeed * Time.deltaTime);
     }
 
     /// <summary>
@@ -141,18 +156,16 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>
     /// 攻撃対象に向かって移動を開始
     /// </summary>
-    /// <param name="direction">攻撃対象</param>
-    public void StartAttackMovement(Vector3 direction)
+    /// <param name="position">攻撃対象の位置</param>
+    public void StartAttackMovement(Vector3 position)
     {
-        _attackDirection = direction;
-        _attackDirection.y = 0;
-
+        _attackTargetPosition = position;
         _isAttackMoving = true;
     }
 
     public void StopAttackMovement()
     {
-        _attackDirection = Vector3.zero;
+        _attackTargetPosition = Vector3.zero;
         _isAttackMoving = false;
     }
 }
