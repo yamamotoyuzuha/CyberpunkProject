@@ -121,7 +121,12 @@ public abstract class CombatActionExecutor
         {
             // 攻撃対象にダメージを与える
             if(!target.TryGetComponent<IDamageable>(out var damageable)) continue;
-            damageable.TakeDamage();
+            
+            var direction = (target.transform.position - Context.Object.transform.position).normalized;
+
+            var context = new DamageContext(ActionInfo.IsKnockback, direction, ActionInfo.KnockbackPower, 
+                ActionInfo.KnockbackUpPower, ActionInfo.KnockbackDuration);
+            damageable.TakeDamage(context);
         }
     }
 

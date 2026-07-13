@@ -2,15 +2,21 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// 攻撃アニメーションの情報
-/// ・アニメーション関連で必要な情報を保持する
+/// 攻撃の情報
+/// ・攻撃内容の情報
+/// ・アニメーション関連で必要な情報
 /// </summary>
 [Serializable]
 public class ActionInfoBase
 {
+    [Header("ノックバックの設定")]
+    [Header("ノックバックを行うか"), SerializeField] private bool _isKnockback;
+    [Header("攻撃方向への吹き飛ばし力"), SerializeField] private float _knockbackPower;
+    [Header("上方向への吹き飛ばし力"), SerializeField] private float _knockbackUpPower;
+    [Header("ノックバックの硬直時間"), SerializeField] private float _knockbackDuration;
+    
     [Header("アニメーションクリップ"), SerializeField] private AnimationClip _animationClip;
     [Header("BlendTreeに渡す値"), SerializeField] private int _animParameter;
-
     [Header("コンボ攻撃の受付時間")]
     [SerializeField, Range(0, 1)] private float _startInputReceptionTime;
     [SerializeField, Range(0, 1)] private float _endInputReceptionTime;
@@ -18,8 +24,17 @@ public class ActionInfoBase
     [SerializeField, Range(0, 1)] private float _inputReservationTime;
     [Header("攻撃入力の受付時間")] 
     [SerializeField, Range(0, 1)] private float _inputAttackStartTime;
+
+    #region 攻撃内容のプロパティ
+
+    public bool IsKnockback => _isKnockback;
+    public float KnockbackPower => _knockbackPower;
+    public float KnockbackUpPower => _knockbackUpPower;
+    public float KnockbackDuration => _knockbackDuration;
+
+    #endregion
     
-    #region プロパティ
+    #region アニメーション関連のプロパティ
     
     /// <summary>
     /// BlendTreeに渡す値
