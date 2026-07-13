@@ -56,6 +56,11 @@ public abstract class CombatActionExecutor
     /// <para>true:入力予約あり　false：入力予約なし</para>
     /// </summary>
     protected bool InputReservation;
+    /// <summary>
+    /// 攻撃の実行
+    /// <para>true：実行済み　false：実行未済</para>
+    /// </summary>
+    protected bool IsAttackExecuted;
     
     /// <summary>
     /// 戦闘アクションが終了したか
@@ -104,6 +109,23 @@ public abstract class CombatActionExecutor
     }
 
     /// <summary>
+    /// 攻撃を実行する
+    /// </summary>
+    protected void AttackExecute()
+    {
+        // 攻撃対象を取得
+        var targets = Context.CombatSystem.GetAttackTarget(CombatActionBase.AttackCount);
+        if (targets == null) return;
+
+        foreach (var target in targets)
+        {
+            // 攻撃対象にダメージを与える
+            if(!target.TryGetComponent<IDamageable>(out var damageable)) continue;
+            damageable.TakeDamage();
+        }
+    }
+
+    /// <summary>
     /// 初期化
     /// </summary>
     protected virtual void Initialization()
@@ -111,6 +133,7 @@ public abstract class CombatActionExecutor
         Index = 0;
         Timer = 0;
         InputReservation = false;
+        IsAttackExecuted = false;
     }
     
     /// <summary>

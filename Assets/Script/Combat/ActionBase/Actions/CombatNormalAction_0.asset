@@ -21,14 +21,17 @@ MonoBehaviour:
     _startInputReceptionTime: 0.5
     _endInputReceptionTime: 0.9
     _inputReservationTime: 0.3
+    _inputAttackStartTime: 0.45
   - _animationClip: {fileID: -203655887218126122, guid: 7f77cec71207f6c4681f8d3e8b205a47, type: 3}
     _animParameter: 1
     _startInputReceptionTime: 0.6
     _endInputReceptionTime: 0.9
     _inputReservationTime: 0.4
+    _inputAttackStartTime: 0.25
   - _animationClip: {fileID: -203655887218126122, guid: 349f86de4520c7e43af40d819f8853c9, type: 3}
     _animParameter: 2
     _startInputReceptionTime: 0.6
     _endInputReceptionTime: 0.9
-    _inputReservationTime: 0.5
+    _inputReservationTime: 0.55
+    _inputAttackStartTime: 0.55
   _attackCount: 3

@@ -670,6 +670,7 @@ GameObject:
   - component: {fileID: 989895766}
   - component: {fileID: 989895765}
   - component: {fileID: 989895764}
+  - component: {fileID: 989895768}
   m_Layer: 0
   m_Name: Enemy_0
   m_TagString: Enemy
@@ -772,6 +773,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &989895768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 989895763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9e327f249118454f850ea8661e250c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy
 --- !u!1 &1246017523
 GameObject:
   m_ObjectHideFlags: 0
@@ -1071,6 +1084,7 @@ GameObject:
   - component: {fileID: 1804678942}
   - component: {fileID: 1804678941}
   - component: {fileID: 1804678940}
+  - component: {fileID: 1804678944}
   m_Layer: 0
   m_Name: Enemy_1
   m_TagString: Enemy
@@ -1173,6 +1187,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1804678944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1804678939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9e327f249118454f850ea8661e250c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy
 --- !u!1 &1842109241
 GameObject:
   m_ObjectHideFlags: 0
@@ -1353,7 +1379,9 @@ MonoBehaviour:
   _combatActions:
   - {fileID: 11400000, guid: b06142ef776aa9c4dbcbd02c5c4473ca, type: 2}
   _detectionRange: {x: 3, y: 2, z: 3}
+  _viewAngle: 120
   _closestDistance: 0
+  _directionWeight: 10
 --- !u!4 &74895281005208047
 Transform:
   m_ObjectHideFlags: 0
@@ -4037,7 +4065,9 @@ MonoBehaviour:
   _combatActions:
   - {fileID: 11400000, guid: b06142ef776aa9c4dbcbd02c5c4473ca, type: 2}
   _detectionRange: {x: 3, y: 1, z: 3}
+  _viewAngle: 120
   _closestDistance: 10
+  _directionWeight: 10
 --- !u!114 &8324306086097282128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4056,6 +4086,7 @@ MonoBehaviour:
   _walkSpeed: 3
   _dashSpeed: 10
   _jumpSpeed: 5
+  _attackMovementSpeed: 18
   _groundLayer:
     serializedVersion: 2
     m_Bits: 64

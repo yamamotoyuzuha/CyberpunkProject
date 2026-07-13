@@ -16,8 +16,8 @@ public class CombatNormalActionExecutor : CombatActionExecutor
         Debug.Log("Normal Start");
         
         // 攻撃対象のキャラクターを取得し、プレイヤーの向きをその方向へと向ける
-        TakeDamageCharacter = Context.CombatSystem.GetTakeDamageCharacter(CombatActionBase.AttackCount);
-        Context.CombatSystem.DirectionClosestTakeDamageCharacter(TakeDamageCharacter);
+        TakeDamageCharacter = Context.CombatSystem.GetAttackTarget(CombatActionBase.AttackCount);
+        Context.CombatSystem.DirectionClosestEnemy(TakeDamageCharacter);
         
         // 移動を不可能にする
         Context.Player.PlayerState.SetCanMove(false);
@@ -29,13 +29,20 @@ public class CombatNormalActionExecutor : CombatActionExecutor
     protected override void OnUpdate()
     {
         Timer += Time.deltaTime;
-        if (Timer <= ActionInfo.InputReservationTime) // 入力予約受け付け時間内か判定
+        if (Timer <= ActionInfo.InputReservationTime && IsAttackExecuted) // 入力予約受け付け時間内か判定
         {
             if (Context.InputSystem.Player.Attack.triggered)
             {
                 InputReservation = true;
                 Debug.LogWarning("入力予約を受け付けました。");
             }
+        }
+        
+        // 攻撃を行う
+        if (Timer >= ActionInfo.InputAttackStartTime && !IsAttackExecuted)
+        {
+            AttackExecute();
+            IsAttackExecuted = true;
         }
 
         // コンボ攻撃の受け付け時間に入力があったら、次の攻撃に移る
@@ -79,5 +86,6 @@ public class CombatNormalActionExecutor : CombatActionExecutor
         PlayAnimation(info);
         Timer = 0;
         InputReservation = false;
+        IsAttackExecuted = false;
     }
 }
