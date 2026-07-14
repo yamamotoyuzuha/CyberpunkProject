@@ -205,10 +205,10 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: 5bc9885375bd8ff41bb5a3df4586f8a2, type: 3}
+    m_Motion: {fileID: 1041423489802838319, guid: 5646dbbe096b5f444ad8e75e002414bf, type: 3}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
-    m_TimeScale: 1.5
+    m_TimeScale: 1.3
     m_CycleOffset: 0
     m_DirectBlendParameter: Move
     m_Mirror: 0
@@ -228,10 +228,18 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Move
     m_Mirror: 0
+  - serializedVersion: 2
+    m_Motion: {fileID: 7245417250056673891, guid: 6128f1872f8e4044f8b5e057ab1e0289, type: 3}
+    m_Threshold: 3
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1.5
+    m_CycleOffset: 0
+    m_DirectBlendParameter: Move
+    m_Mirror: 0
   m_BlendParameter: NAttackParameter
   m_BlendParameterY: Move
   m_MinThreshold: 0
-  m_MaxThreshold: 2
+  m_MaxThreshold: 3
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0
   m_BlendType: 0

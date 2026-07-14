@@ -29,7 +29,7 @@ public class CombatNormalActionExecutor : CombatActionExecutor
     protected override void OnUpdate()
     {
         Timer += Time.deltaTime;
-        if (Timer <= ActionInfo.InputReservationTime && IsAttackExecuted) // 入力予約受け付け時間内か判定
+        if (Timer <= ActionInfo.AnimationInfo.InputReservationTime && IsAttackExecuted) // 入力予約受け付け時間内か判定
         {
             if (Context.InputSystem.Player.Attack.triggered)
             {
@@ -39,14 +39,14 @@ public class CombatNormalActionExecutor : CombatActionExecutor
         }
         
         // 攻撃を行う
-        if (Timer >= ActionInfo.InputAttackStartTime && !IsAttackExecuted)
+        if (Timer >= ActionInfo.AnimationInfo.InputAttackStartTime && !IsAttackExecuted)
         {
             AttackExecute();
             IsAttackExecuted = true;
         }
 
         // コンボ攻撃の受け付け時間に入力があったら、次の攻撃に移る
-        if (Timer >= ActionInfo.StartInputReceptionTime && Timer <= ActionInfo.EndInputReceptionTime)
+        if (Timer >= ActionInfo.AnimationInfo.StartInputReceptionTime && Timer <= ActionInfo.AnimationInfo.EndInputReceptionTime)
         {
             if (InputReservation || Context.InputSystem.Player.Attack.triggered)
             {
@@ -55,7 +55,7 @@ public class CombatNormalActionExecutor : CombatActionExecutor
         }
         
         // 現在の攻撃アニメーションが終了したら、攻撃を終了する
-        if (Timer >= ActionInfo.EndTime)
+        if (Timer >= ActionInfo.AnimationInfo.EndTime)
         {
             CurrentPhase = Phase.End;
         }

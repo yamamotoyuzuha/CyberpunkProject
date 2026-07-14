@@ -18,13 +18,11 @@ public class Enemy : CharacterBase, IDamageable
         _context = new EnemyContext(_movement, _stateMachine);
         _stateMachine.Initialization(_context);
         _enemyUI.Initialization(_status);
-        
-        EnemyDamageUI.Instance.Initialization(_status);
     }
 
     private void Start()
     {
-        
+        EnemyDamageUI.Instance.Initialization(_status);
     }
 
     private void Update()

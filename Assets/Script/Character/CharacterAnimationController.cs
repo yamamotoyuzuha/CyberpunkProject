@@ -23,7 +23,7 @@ public class CharacterAnimationController : MonoBehaviour, ICharacterAnimator
 
     public void PlayAttackAnimation(ActionAnimParameter parameter, ActionInfoBase actionInfo)
     {
-        _animator.SetFloat(parameter.ParameterFloatName, actionInfo.AnimParameter);
+        _animator.SetFloat(parameter.ParameterFloatName, actionInfo.AnimationInfo.AnimParameter);
         _animator.SetTrigger(parameter.ParameterTriggerName);
     }
 
