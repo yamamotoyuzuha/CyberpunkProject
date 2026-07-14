@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -17,6 +18,11 @@ public class CharacterStatus
     /// <para>現在のHP、最大HP</para>
     /// </summary>
     public Action<int, int> OnHpChanged;
+    /// <summary>
+    /// ダメージを表示する
+    /// <para>ダメージ</para>
+    /// </summary>
+    public Func<Transform, int, UniTask> OnShowDamage;
 
     #endregion
 
@@ -30,13 +36,15 @@ public class CharacterStatus
     /// <summary>
     /// ダメージを受ける
     /// </summary>
+    /// <param name="position">位置</param>
     /// <param name="damage">ダメージ</param>
-    public void TakeDamage(int damage)
+    public void TakeDamage(Transform position, int damage)
     {
         Debug.Log("攻撃前のHP" + Hp);
         Hp = Mathf.Max(0, Hp - damage);
         Debug.Log("攻撃後のHP" + Hp);
         OnHpChanged?.Invoke(Hp, MaxHp);
+        OnShowDamage?.Invoke(position, damage);
     }
 
     /// <summary>

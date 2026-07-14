@@ -18,6 +18,8 @@ public class Enemy : CharacterBase, IDamageable
         _context = new EnemyContext(_movement, _stateMachine);
         _stateMachine.Initialization(_context);
         _enemyUI.Initialization(_status);
+        
+        EnemyDamageUI.Instance.Initialization(_status);
     }
 
     private void Start()
@@ -36,6 +38,6 @@ public class Enemy : CharacterBase, IDamageable
         
         _context.DamageContext = context;
         _stateMachine.SwitchState(EnemyState.Damage);
-        _status.TakeDamage(context.Damage);
+        _status.TakeDamage(transform, context.Damage);
     }
 }

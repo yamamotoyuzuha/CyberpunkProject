@@ -1,6 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// EnemyのUIを管理する
+/// ・HPなど
+/// </summary>
 public class EnemyUI : MonoBehaviour
 {
     [Header("HPUI"), SerializeField] private GameObject _hpUI;
