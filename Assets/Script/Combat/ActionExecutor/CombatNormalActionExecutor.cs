@@ -64,8 +64,11 @@ public class CombatNormalActionExecutor : CombatActionExecutor
     protected override void OnEnd()
     {
         Debug.Log("Normal End");
+        
         // 移動を可能にする
         Context.Player.PlayerState.SetCanMove(true);
+        // 攻撃踏み込みを停止
+        Context.PlayerMovement.StopAttackMovement();
     }
 
     /// <summary>
@@ -82,6 +85,15 @@ public class CombatNormalActionExecutor : CombatActionExecutor
             CurrentPhase = Phase.End;
             return;
         }
+
+        // TODO：空中にいるときの攻撃アニメーションを再生する
+        // TODO：下に叩き落とすイメージで、時間があれば
+        /*
+        if (!Context.PlayerMovement.GroundCheck())
+        {
+            
+        }
+        */
         
         // アニメーション前に攻撃前の踏み込みを行う
         StartAttackMovement();
