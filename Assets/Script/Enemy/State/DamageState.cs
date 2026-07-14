@@ -19,13 +19,12 @@ public class DamageState : IEnemyState
         switch (damageContext.HitReactionContext.ActionType)
         {
             case ActionType.None:
-                // 何も割り当てられていない場合、待機に遷移s
+                // 何も割り当てられていない場合、待機に遷移
                 _context.StateMachine.SwitchState(EnemyState.Idle);
                 break;
             
             case ActionType.Knockback:
                 // ノックバックを実行
-                //_context.Movement.KnockbackExecute(damageContext);
                 _context.Movement.DamageExecute(damageContext);
                 break;
             

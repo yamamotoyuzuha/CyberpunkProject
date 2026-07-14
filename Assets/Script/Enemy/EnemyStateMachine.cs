@@ -29,11 +29,13 @@ public class EnemyStateMachine : MonoBehaviour
         _enemyStates = new Dictionary<EnemyState, IEnemyState>()
         {
             { EnemyState.Idle, new IdleState() },
-            { EnemyState.Move, new MoveState() },
+            { EnemyState.Move, new MoveState(context) },
+            { EnemyState.Chase , new ChaseState(context) },
+            { EnemyState.Attack , new AttackState(context) },
             { EnemyState.Damage, new DamageState(context) }
         };
 
-        _currentState = _enemyStates[EnemyState.Idle];
+        _currentState = _enemyStates[EnemyState.Move];
         _currentState?.Enter();
     }
 

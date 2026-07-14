@@ -17,6 +17,7 @@ public enum EnemyState
     None,
     Idle,
     Move,
+    Chase,
     Attack,
     Damage,
     Death
