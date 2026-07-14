@@ -8,6 +8,7 @@ public class CharacterAnimationController : MonoBehaviour, ICharacterAnimator
     [Header("アニメーションのパラメータ名")]
     [Header("移動"), SerializeField] private string _moveAnimationName;
     [Header("ジャンプ"), SerializeField] private string _jumpParameter;
+    [Header("回避"), SerializeField] private string _evasionParameter;
     
     private Animator _animator;
 
@@ -24,6 +25,11 @@ public class CharacterAnimationController : MonoBehaviour, ICharacterAnimator
     public void PlayAttackAnimation(ActionAnimParameter parameter, ActionInfoBase actionInfo)
     {
         _animator.SetFloat(parameter.ParameterFloatName, actionInfo.AnimationInfo.AnimParameter);
+        _animator.SetTrigger(parameter.ParameterTriggerName);
+    }
+
+    public void PlayAirAttackAnimation(ActionAnimParameter parameter)
+    {
         _animator.SetTrigger(parameter.ParameterTriggerName);
     }
 
@@ -44,5 +50,13 @@ public class CharacterAnimationController : MonoBehaviour, ICharacterAnimator
     public void JumpAnimation()
     {
         _animator.SetTrigger(_jumpParameter);
+    }
+
+    /// <summary>
+    /// 回避アニメーション
+    /// </summary>
+    public void EvasionAnimation()
+    {
+        _animator.SetTrigger(_evasionParameter);
     }
 }

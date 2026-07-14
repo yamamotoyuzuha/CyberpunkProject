@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using DG.Tweening;
+using Cysharp.Threading.Tasks;
 
 /// <summary>
 /// プレイヤーの動きを管理するクラス
@@ -13,6 +15,8 @@ public class PlayerMovement : MonoBehaviour
     [Header("歩き速度"), SerializeField] private float _walkSpeed = 3f;
     [Header("走り速度"), SerializeField] private float _dashSpeed = 10f;
     [Header("ジャンプ速度"), SerializeField] private float _jumpSpeed = 5f;
+    [Header("回避速度"), SerializeField] private float _evasionSpeed = 7f;
+    [Header("回避アニメーションの時間"), SerializeField] private float _evasionAnimationTime;
     [Header("攻撃移動時の停止距離"), SerializeField] private float _attackMovementStopDistance = 1f;
     [Header("攻撃時の移動速度"), SerializeField] private float _attackMovementSpeed = 15f;
     [Header("滞空時間"), SerializeField] private float _hangTime = 1f;
@@ -21,6 +25,12 @@ public class PlayerMovement : MonoBehaviour
     [Header("アニメーションのパラメータ設定")]
     [SerializeField] private float _walkBlendValue = 0.5f;
     [SerializeField] private float _dashBlendValue = 1f;
+    
+    /// <summary>
+    /// 回避しているか
+    /// <para>true：回避している　false：回避していない</para>
+    /// </summary>
+    public bool IsEvasion { get; private set; }
     
     private Camera _mainCamera;
     private Rigidbody _rb;
@@ -34,7 +44,6 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 _attackTargetPosition;
     private bool _isAttackMoving;
-
     private float _hangTimer;
 
     #endregion
@@ -48,11 +57,13 @@ public class PlayerMovement : MonoBehaviour
     private void OnEnable()
     {
         _playerInputHandler.JumpAction += Jump;
+        _playerInputHandler.EvasionAction += Evasion;
     }
 
     private void OnDisable()
     {
         _playerInputHandler.JumpAction -= Jump;
+        _playerInputHandler.EvasionAction -= Evasion;
     }
 
     private void FixedUpdate()
@@ -66,6 +77,8 @@ public class PlayerMovement : MonoBehaviour
     /// </summary>
     private void Move()
     {
+        if(IsEvasion) return;
+        
         if (!_player.PlayerState.CanMove)
         {
             if (_isAttackMoving) // 攻撃の踏み込みがある場合
@@ -129,6 +142,51 @@ public class PlayerMovement : MonoBehaviour
         if(!GroundCheck()) return;
         _rb.AddForce(Vector3.up * _jumpSpeed, ForceMode.Impulse);
         _animController.JumpAnimation();
+    }
+
+    /// <summary>
+    /// 回避
+    /// </summary>
+    private async UniTask Evasion()
+    {
+        IsEvasion = true;
+
+        Vector3 direction;
+        Vector3 linearVelocity;
+        
+        // カメラの前と右を取得
+        var forward = _mainCamera.transform.forward;
+        var right = _mainCamera.transform.right;
+        
+        // 移動量がなかった場合はカメラが向いてる方向に回避
+        if (_playerInputHandler.MoveInput == Vector2.zero)
+        {
+            direction = forward;
+        }
+        else
+        {
+            // カメラを考慮した、移動方向を作成
+            direction = (_playerInputHandler.MoveInput.x * right + _playerInputHandler.MoveInput.y * forward).normalized;
+        }
+        
+        linearVelocity = new Vector3(direction.x * _evasionSpeed, _rb.linearVelocity.y, direction.z * _evasionSpeed);
+        _rb.linearVelocity = linearVelocity;
+        DesignatedDirectionRotation(linearVelocity);
+        
+        _animController.EvasionAnimation();
+
+        // 別のアニメーションに上書きされて、アニメーションイベントが発動ときのため
+        await UniTask.Delay(TimeSpan.FromSeconds(_evasionAnimationTime));
+        if(IsEvasion) IsEvasion = false;
+    }
+
+    /// <summary>
+    /// 回避アニメーション終了
+    /// <para>アニメーションイベントから呼ばれる</para>
+    /// </summary>
+    public void EndEvasion()
+    {
+        IsEvasion = false;
     }
     
     /// <summary>
