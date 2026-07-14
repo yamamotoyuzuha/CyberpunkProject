@@ -10,13 +10,15 @@ public class DamageContext
     public float Power { get; private set; }
     public float UpPower { get; private set; }
     public float Duration { get; private set; }
+    public int Damage { get; private set; }
     
-    public DamageContext(bool isKnockback, Vector3 direction, float power, float upPower, float duration)
+    public DamageContext(bool isKnockback, Vector3 direction, float power, float upPower, float duration, int damage)
     {
         IsKnockback = isKnockback;
         Direction = direction;
         Power = power;
         UpPower = upPower;
         Duration = duration;
+        Damage = damage;
     }
 }

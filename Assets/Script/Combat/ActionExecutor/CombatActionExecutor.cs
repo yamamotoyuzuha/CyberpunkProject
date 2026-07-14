@@ -135,7 +135,7 @@ public abstract class CombatActionExecutor
             var direction = (target.transform.position - Context.Object.transform.position).normalized;
 
             var context = new DamageContext(ActionInfo.IsKnockback, direction, ActionInfo.KnockbackPower, 
-                ActionInfo.KnockbackUpPower, ActionInfo.KnockbackDuration);
+                ActionInfo.KnockbackUpPower, ActionInfo.KnockbackDuration, CombatActionBase.Damage);
             damageable.TakeDamage(context);
         }
     }

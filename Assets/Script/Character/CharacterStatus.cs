@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -5,38 +6,37 @@ using UnityEngine;
 /// </summary>
 public class CharacterStatus
 {
-    private int _hp;
-    private int _stamina;
+    public int MaxHp { get; private set; }
+    public int Hp { get; private set; }
+    public int Stamina { get; private set; }
 
-    #region プロパティ
+    #region イベント
 
-    public int Hp
-    {
-        get => _hp;
-        set => ReduceHp(value);
-    }
-
-    public int Stamina
-    {
-        get => _stamina;
-        set => ReduceStamina(value);
-    }
+    /// <summary>
+    /// HPに変更があったときに呼ばれる
+    /// <para>現在のHP、最大HP</para>
+    /// </summary>
+    public Action<int, int> OnHpChanged;
 
     #endregion
-    
+
     public CharacterStatus(int hp, int stamina)
     {
-        _hp = hp;
-        _stamina = stamina;
+        MaxHp = hp;
+        Hp = hp;
+        Stamina = stamina;
     }
 
     /// <summary>
-    /// HPを減らす
+    /// ダメージを受ける
     /// </summary>
-    /// <param name="damage">受けたダメージ</param>
-    private void ReduceHp(int damage)
+    /// <param name="damage">ダメージ</param>
+    public void TakeDamage(int damage)
     {
-        _hp = Mathf.Min(0, _hp - damage);
+        Debug.Log("攻撃前のHP" + Hp);
+        Hp = Mathf.Max(0, Hp - damage);
+        Debug.Log("攻撃後のHP" + Hp);
+        OnHpChanged?.Invoke(Hp, MaxHp);
     }
 
     /// <summary>
@@ -45,6 +45,6 @@ public class CharacterStatus
     /// <param name="amount">消費したスタミナ</param>
     private void ReduceStamina(int amount)
     {
-        _stamina = Mathf.Max(0, _stamina - amount);
+        Stamina = Mathf.Max(0, Stamina - amount);
     }
 }

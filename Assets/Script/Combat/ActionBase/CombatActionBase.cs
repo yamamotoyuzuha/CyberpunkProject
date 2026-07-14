@@ -11,6 +11,7 @@ public abstract class CombatActionBase : ScriptableObject
     [Header("アニメーターのパラメータ名"), SerializeField] private ActionAnimParameter _actionAnimParameter;
     [Header("攻撃情報"), SerializeField] private List<ActionInfoBase> _actionInfos;
     [Header("攻撃対象人数"), SerializeField] private int _attackCount;
+    [Header("ダメージ量"), SerializeField] private int _damage;
     
     /// <summary>
     /// アニメーターのパラメータ名
@@ -24,11 +25,16 @@ public abstract class CombatActionBase : ScriptableObject
     /// 攻撃対象人数
     /// </summary>
     public int AttackCount => _attackCount;
+    /// <summary>
+    /// ダメージ量
+    /// </summary>
+    public int Damage => _damage;
 
     /// <summary>
     /// この戦闘アクションを実行するためのCombatActionExecutorを生成する
     /// </summary>
     /// <param name="combatSystemContext">戦闘アクションに必要な情報</param>
+    /// <param name="actionBase">戦闘アクション</param>
     /// <returns>この戦闘アクションのExecutor</returns>
     public abstract CombatActionExecutor Create(CombatSystemContext combatSystemContext, CombatActionBase actionBase);
     
