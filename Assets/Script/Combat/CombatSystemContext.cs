@@ -19,6 +19,10 @@ public class CombatSystemContext
     /// </summary>
     public PlayerCombatSystem CombatSystem { get; private set; }
     /// <summary>
+    /// プレイヤーの移動
+    /// </summary>
+    public PlayerMovement PlayerMovement { get; private set; }
+    /// <summary>
     /// プレイヤーの入力情報
     /// </summary>
     public PlayerInputSystem InputSystem { get; private set; }
@@ -27,11 +31,13 @@ public class CombatSystemContext
     /// </summary>
     public ICharacterAnimator CharacterAnimator { get; private set; }
 
-    public CombatSystemContext(GameObject obj, Player player, PlayerCombatSystem combatSystem, PlayerInputSystem inputSystem, ICharacterAnimator characterAnimator)
+    public CombatSystemContext(GameObject obj, Player player, PlayerCombatSystem combatSystem, 
+        PlayerMovement playerMovement, PlayerInputSystem inputSystem, ICharacterAnimator characterAnimator)
     {
         Object = obj;
         Player = player;
         CombatSystem = combatSystem;
+        PlayerMovement = playerMovement;
         InputSystem = inputSystem;
         CharacterAnimator = characterAnimator;
     }

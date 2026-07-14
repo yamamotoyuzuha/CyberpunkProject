@@ -924,6 +924,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d93d1304dc81e1243a023c795f007bc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
+  _hangTime: 1
 --- !u!54 &989895771
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1777,6 +1778,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d93d1304dc81e1243a023c795f007bc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
+  _hangTime: 1
 --- !u!54 &1804678947
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4706,7 +4708,8 @@ MonoBehaviour:
   _dashSpeed: 10
   _jumpSpeed: 5
   _attackMovementStopDistance: 1
-  _attackMovementSpeed: 11
+  _attackMovementSpeed: 12
+  _hangTime: 1
   _groundLayer:
     serializedVersion: 2
     m_Bits: 64

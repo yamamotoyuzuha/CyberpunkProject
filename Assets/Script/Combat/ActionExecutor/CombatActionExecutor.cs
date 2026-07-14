@@ -109,6 +109,14 @@ public abstract class CombatActionExecutor
     }
 
     /// <summary>
+    /// 空中にいるときの攻撃アニメーションを再生する
+    /// </summary>
+    protected void PlayAriAnimation()
+    {
+        Context.CharacterAnimator.PlayAirAttackAnimation(CombatActionBase.AnimParameter);
+    }
+
+    /// <summary>
     /// 攻撃前の踏み込みを実行
     /// </summary>
     protected void StartAttackMovement()
@@ -138,11 +146,44 @@ public abstract class CombatActionExecutor
             var context = new DamageContext(ActionInfo.IsKnockback, direction, ActionInfo.KnockbackPower, 
                 ActionInfo.KnockbackUpPower, ActionInfo.KnockbackDuration, CombatActionBase.Damage);
             */
+            
+            // TODO：ここ、ノックバックに依存してるから修正したほうがいい
+            /*
             var knockbackInfo = ActionInfo.KnockbackInfo;
-            var context = new DamageContext(knockbackInfo.IsKnockback, direction, knockbackInfo.KnockbackPower,
-                knockbackInfo.KnockbackUpPower, knockbackInfo.KnockbackDuration, CombatActionBase.Damage);
-            damageable.TakeDamage(context);
+            var hitContext = new HitReactionContext(ActionInfo.ActionType, direction, knockbackInfo.KnockbackPower,
+                knockbackInfo.KnockbackUpPower, knockbackInfo.KnockbackDuration);
+            var damageContext = new DamageContext(hitContext, CombatActionBase.Damage);
+            */
+            var hitContext = GetHitReactionContext(ActionInfo, direction);
+            var damageContext = new DamageContext(hitContext, CombatActionBase.Damage, Context.PlayerMovement);
+            damageable.TakeDamage(damageContext);
         }
+    }
+
+    /// <summary>
+    /// 攻撃の種類に応じた反応を返す
+    /// </summary>
+    /// <param name="actionInfo">攻撃の情報</param>
+    /// <param name="direction">敵の方向</param>
+    /// <returns>攻撃を受けた時の反応パラメータ</returns>
+    private HitReactionContext GetHitReactionContext(ActionInfoBase actionInfo, Vector3 direction)
+    {
+        switch (actionInfo.ActionType)
+        {
+            case ActionType.Knockback:
+                var infoK = actionInfo.KnockbackInfo;
+                var contextK = new HitReactionContext(actionInfo.ActionType, direction, infoK.KnockbackPower,
+                    infoK.KnockbackUpPower, infoK.KnockbackDuration);
+                return contextK;
+            
+            case ActionType.Launch:
+                var infoL = actionInfo.LaunchInfo;
+                var contextL = new HitReactionContext(actionInfo.ActionType, Vector3.zero, 0,
+                    infoL.LaunchHeight, infoL.LaunchTime);
+                return contextL;
+        }
+        
+        return null;
     }
 
     /// <summary>

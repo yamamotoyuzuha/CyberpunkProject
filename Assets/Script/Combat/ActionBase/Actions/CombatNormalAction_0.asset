@@ -16,38 +16,69 @@ MonoBehaviour:
     _parameterTriggerName: NormalAttack
     _parameterFloatName: NAttackParameter
   _actionInfos:
-  - _knockbackInfo:
+  - _actionType: 1
+    _knockbackInfo:
       _isKnockback: 1
       _knockbackPower: 2
       _knockbackUpPower: 2
       _knockbackDuration: 1
-    _animationClip: {fileID: -203655887218126122, guid: 5bc9885375bd8ff41bb5a3df4586f8a2, type: 3}
-    _animParameter: 0
-    _startInputReceptionTime: 0.5
-    _endInputReceptionTime: 0.9
-    _inputReservationTime: 0.3
-    _inputAttackStartTime: 0.45
-  - _knockbackInfo:
+    _launchInfo:
+      _launchHeight: 0
+      _launchTime: 0
+    _animationInfo:
+      _animationClip: {fileID: -203655887218126122, guid: 5bc9885375bd8ff41bb5a3df4586f8a2, type: 3}
+      _animParameter: 0
+      _startInputReceptionTime: 0.5
+      _endInputReceptionTime: 0.9
+      _inputReservationTime: 0.3
+      _inputAttackStartTime: 0.45
+  - _actionType: 1
+    _knockbackInfo:
       _isKnockback: 1
       _knockbackPower: 2
       _knockbackUpPower: 3
       _knockbackDuration: 1
-    _animationClip: {fileID: -203655887218126122, guid: 7f77cec71207f6c4681f8d3e8b205a47, type: 3}
-    _animParameter: 1
-    _startInputReceptionTime: 0.6
-    _endInputReceptionTime: 0.9
-    _inputReservationTime: 0.4
-    _inputAttackStartTime: 0.25
-  - _knockbackInfo:
+    _launchInfo:
+      _launchHeight: 7
+      _launchTime: 0.5
+    _animationInfo:
+      _animationClip: {fileID: -203655887218126122, guid: 7f77cec71207f6c4681f8d3e8b205a47, type: 3}
+      _animParameter: 1
+      _startInputReceptionTime: 0.6
+      _endInputReceptionTime: 0.9
+      _inputReservationTime: 0.4
+      _inputAttackStartTime: 0.25
+  - _actionType: 1
+    _knockbackInfo:
       _isKnockback: 1
       _knockbackPower: 1
       _knockbackUpPower: 3
       _knockbackDuration: 1
-    _animationClip: {fileID: -203655887218126122, guid: 349f86de4520c7e43af40d819f8853c9, type: 3}
-    _animParameter: 2
-    _startInputReceptionTime: 0.6
-    _endInputReceptionTime: 0.9
-    _inputReservationTime: 0.55
-    _inputAttackStartTime: 0.55
+    _launchInfo:
+      _launchHeight: 0
+      _launchTime: 0
+    _animationInfo:
+      _animationClip: {fileID: -203655887218126122, guid: 349f86de4520c7e43af40d819f8853c9, type: 3}
+      _animParameter: 2
+      _startInputReceptionTime: 0.6
+      _endInputReceptionTime: 0.9
+      _inputReservationTime: 0.66
+      _inputAttackStartTime: 0.45
+  - _actionType: 2
+    _knockbackInfo:
+      _isKnockback: 1
+      _knockbackPower: 1
+      _knockbackUpPower: 5
+      _knockbackDuration: 1
+    _launchInfo:
+      _launchHeight: 7
+      _launchTime: 0.5
+    _animationInfo:
+      _animationClip: {fileID: 7245417250056673891, guid: 6128f1872f8e4044f8b5e057ab1e0289, type: 3}
+      _animParameter: 3
+      _startInputReceptionTime: 0.5
+      _endInputReceptionTime: 0.9
+      _inputReservationTime: 0.3
+      _inputAttackStartTime: 0.35
   _attackCount: 3
   _damage: 10

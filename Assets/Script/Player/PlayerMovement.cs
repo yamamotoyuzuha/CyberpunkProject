@@ -1,4 +1,5 @@
 using UnityEngine;
+using DG.Tweening;
 
 /// <summary>
 /// プレイヤーの動きを管理するクラス
@@ -14,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("ジャンプ速度"), SerializeField] private float _jumpSpeed = 5f;
     [Header("攻撃移動時の停止距離"), SerializeField] private float _attackMovementStopDistance = 1f;
     [Header("攻撃時の移動速度"), SerializeField] private float _attackMovementSpeed = 15f;
+    [Header("滞空時間"), SerializeField] private float _hangTime = 1f;
     [Header("地面のレイヤー"), SerializeField] private LayerMask _groundLayer;
     [Header("地面を判定するRayの長さ"), SerializeField] private float _rayDistance;
     [Header("アニメーションのパラメータ設定")]
@@ -28,10 +30,12 @@ public class PlayerMovement : MonoBehaviour
     /// </summary>
     private float _moveBlendValue;
 
-    #region 攻撃時の移動関連
+    #region 攻撃関連の変数
 
     private Vector3 _attackTargetPosition;
     private bool _isAttackMoving;
+
+    private float _hangTimer;
 
     #endregion
 
@@ -51,14 +55,10 @@ public class PlayerMovement : MonoBehaviour
         _playerInputHandler.JumpAction -= Jump;
     }
 
-    private void Update()
-    {
-        
-    }
-
     private void FixedUpdate()
     {
         Move();
+        HangTimerUpdate();
     }
 
     /// <summary>
@@ -135,7 +135,7 @@ public class PlayerMovement : MonoBehaviour
     /// 地面の判定
     /// </summary>
     /// <returns>true：地面についてる　false：地面についていない</returns>
-    private bool GroundCheck()
+    public bool GroundCheck()
     {
         return Physics.Raycast(transform.position, Vector3.down, _rayDistance, _groundLayer);
     }
@@ -167,5 +167,43 @@ public class PlayerMovement : MonoBehaviour
     {
         _attackTargetPosition = Vector3.zero;
         _isAttackMoving = false;
+    }
+
+    private void HangTimerUpdate()
+    {
+        if (_rb.linearDamping != 0)
+        {
+            _hangTimer -= Time.deltaTime;
+        }
+    
+        if (_hangTimer <= 0)
+        {
+            OnGravity();
+        }
+    }
+
+    private void OnGravity()
+    {
+        if (_rb.linearDamping != 0)
+        {
+            _rb.linearDamping = 0;
+            _hangTimer = _hangTime;
+        }
+    }
+
+    private void OffGravity()
+    {
+        _rb.linearDamping = 40;
+        _hangTimer = _hangTime;
+    }
+
+    /// <summary>
+    /// 打ち上げ攻撃によるプレイヤーの打ち上げ
+    /// </summary>
+    /// <param name="context">ダメージ情報</param>
+    public void LaunchExecute(DamageContext context)
+    {
+        OffGravity();
+        _rb.DOMoveY(context.HitReactionContext.UpPower, context.HitReactionContext.Duration);
     }
 }

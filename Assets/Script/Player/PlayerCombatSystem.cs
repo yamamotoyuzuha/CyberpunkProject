@@ -27,7 +27,7 @@ public class PlayerCombatSystem : MonoBehaviour
     private void Start()
     {
         _combatSystemContext = new CombatSystemContext(this.gameObject, GetComponent<Player>(), this,
-            _inputHandler.PlayerInputSystem, GetComponent<ICharacterAnimator>());
+            _playerMovement, _inputHandler.PlayerInputSystem, GetComponent<ICharacterAnimator>());
     }
 
     private void Update()
