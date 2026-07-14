@@ -925,6 +925,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   _hangTime: 1
+  _amplitude: 0.08
+  _vibrationFrequency: 15
 --- !u!54 &989895771
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1779,6 +1781,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   _hangTime: 1
+  _amplitude: 0.08
+  _vibrationFrequency: 15
 --- !u!54 &1804678947
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4708,7 +4712,7 @@ MonoBehaviour:
   _dashSpeed: 10
   _jumpSpeed: 5
   _attackMovementStopDistance: 1
-  _attackMovementSpeed: 12
+  _attackMovementSpeed: 13
   _hangTime: 1
   _groundLayer:
     serializedVersion: 2

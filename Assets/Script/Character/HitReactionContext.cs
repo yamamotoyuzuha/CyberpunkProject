@@ -10,13 +10,15 @@ public class HitReactionContext
     public float Power { get; private set; }
     public float UpPower { get; private set; }
     public float Duration { get; private set; }
+    public float HitStopTime { get; private set; }
 
-    public HitReactionContext(ActionType actionType, Vector3 direction, float power, float upPower, float duration)
+    public HitReactionContext(ActionType actionType, Vector3 direction, float power, float upPower, float duration, float hitStopTime)
     {
         ActionType = actionType;
         Direction = direction;
         Power = power;
         UpPower = upPower;
         Duration = duration;
+        HitStopTime = hitStopTime;
     }
 }

@@ -7,8 +7,16 @@ using DG.Tweening;
 public class EnemyMovement : MonoBehaviour
 {
     [Header("滞空時間"), SerializeField] private float _hangTime = 1f;
+
+    [Header("ヒットストップの設定")]
+    [SerializeField] private float _amplitude = 0.05f; // 振れ幅
+    [SerializeField] private int _vibrationFrequency = 10; // 振動回数
     
     private Rigidbody _rb;
+    /// <summary>
+    /// ヒットストップ用のシーケンス
+    /// </summary>
+    private Sequence _hitSequence;
     
     private float _hangTimer;
 
@@ -23,11 +31,39 @@ public class EnemyMovement : MonoBehaviour
     }
 
     /// <summary>
+    /// ダメージを受けたときに実行
+    /// </summary>
+    /// <param name="context">ダメージ情報</param>
+    public void DamageExecute(DamageContext context)
+    {
+        // 前回の演出が残ってたら、停止
+        _hitSequence?.Kill();
+        
+        // ヒットストップが終了したら、ノックバックを実行
+        HitStop(context).OnComplete(() => KnockbackExecute(context));
+    }
+    
+    /// <summary>
+    /// ヒットストップ
+    /// </summary>
+    /// <param name="context">ダメージ情報</param>
+    /// <returns>ヒットストップのシーケンス</returns>
+    private Sequence HitStop(DamageContext context)
+    {
+        _hitSequence = DOTween.Sequence();
+        // 振動させる
+        _hitSequence.Append(transform.DOShakePosition(context.HitReactionContext.HitStopTime,
+            _amplitude, _vibrationFrequency, fadeOut: false));
+        return _hitSequence;
+    }
+
+    /// <summary>
     /// ノックバックを実行
     /// </summary>
     /// <param name="context">ダメージ情報</param>
-    public void KnockbackExecute(DamageContext context)
+    private void KnockbackExecute(DamageContext context)
     {
+        // ノックバックする方向と威力を計算する
         Vector3 force = context.HitReactionContext.Direction.normalized * context.HitReactionContext.Power 
                         + Vector3.up * context.HitReactionContext.UpPower;
         _rb.AddForce(force, ForceMode.Impulse);

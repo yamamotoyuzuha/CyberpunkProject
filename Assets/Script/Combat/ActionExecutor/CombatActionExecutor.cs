@@ -173,13 +173,13 @@ public abstract class CombatActionExecutor
             case ActionType.Knockback:
                 var infoK = actionInfo.KnockbackInfo;
                 var contextK = new HitReactionContext(actionInfo.ActionType, direction, infoK.KnockbackPower,
-                    infoK.KnockbackUpPower, infoK.KnockbackDuration);
+                    infoK.KnockbackUpPower, infoK.KnockbackDuration, infoK.HitStopTime);
                 return contextK;
             
             case ActionType.Launch:
                 var infoL = actionInfo.LaunchInfo;
                 var contextL = new HitReactionContext(actionInfo.ActionType, Vector3.zero, 0,
-                    infoL.LaunchHeight, infoL.LaunchTime);
+                    infoL.LaunchHeight, infoL.LaunchTime, infoL.HitStopTime);
                 return contextL;
         }
         

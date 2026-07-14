@@ -25,7 +25,8 @@ public class DamageState : IEnemyState
             
             case ActionType.Knockback:
                 // ノックバックを実行
-                _context.Movement.KnockbackExecute(damageContext);
+                //_context.Movement.KnockbackExecute(damageContext);
+                _context.Movement.DamageExecute(damageContext);
                 break;
             
             case ActionType.Launch:

@@ -11,9 +11,11 @@ public class KnockbackInfo
     [Header("攻撃方向への吹き飛ばし力"), SerializeField] private float _knockbackPower;
     [Header("上方向への吹き飛ばし力"), SerializeField] private float _knockbackUpPower;
     [Header("ノックバックの硬直時間"), SerializeField] private float _knockbackDuration;
+    [Header("ヒットストップの時間"), SerializeField] private float _hitStopTime;
     
     public bool IsKnockback => _isKnockback;
     public float KnockbackPower => _knockbackPower;
     public float KnockbackUpPower => _knockbackUpPower;
     public float KnockbackDuration => _knockbackDuration;
+    public float HitStopTime => _hitStopTime;
 }
