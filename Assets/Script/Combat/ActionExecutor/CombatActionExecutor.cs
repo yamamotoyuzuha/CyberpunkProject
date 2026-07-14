@@ -99,13 +99,22 @@ public abstract class CombatActionExecutor
     }
 
     /// <summary>
-    /// 攻撃アニメーターを再生する
+    /// 攻撃アニメーションを再生する
     /// </summary>
     /// <param name="actionInfo">攻撃アニメーションの情報</param>
     protected void PlayAnimation(ActionInfoBase actionInfo)
     {
         ActionInfo = actionInfo;
         Context.CharacterAnimator.PlayAttackAnimation(CombatActionBase.AnimParameter, actionInfo);
+    }
+
+    /// <summary>
+    /// 攻撃前の踏み込みを実行
+    /// </summary>
+    protected void StartAttackMovement()
+    {
+        var targets = Context.CombatSystem.GetAttackTarget(CombatActionBase.AttackCount);
+        Context.CombatSystem.DirectionClosestEnemy(targets);
     }
 
     /// <summary>

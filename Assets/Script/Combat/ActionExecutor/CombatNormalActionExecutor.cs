@@ -83,6 +83,8 @@ public class CombatNormalActionExecutor : CombatActionExecutor
             return;
         }
         
+        // アニメーション前に攻撃前の踏み込みを行う
+        StartAttackMovement();
         PlayAnimation(info);
         Timer = 0;
         InputReservation = false;
