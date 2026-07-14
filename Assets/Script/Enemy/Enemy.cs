@@ -7,6 +7,8 @@ public class Enemy : CharacterBase, IDamageable
 {
     [Header("EnemyMovement"), SerializeField] private EnemyMovement _movement;
     [Header("EnemyStateMachine"), SerializeField] private EnemyStateMachine _stateMachine;
+    [Header("EnemyDetection"), SerializeField] private EnemyDetection _detection;
+    [Header("EnemyCombat"), SerializeField] private EnemyCombat _combat;
     [Header("EnemyUI"), SerializeField] private EnemyUI _enemyUI;
 
     private CharacterStatus _status;
@@ -15,7 +17,7 @@ public class Enemy : CharacterBase, IDamageable
     private void Awake()
     {
         _status = new CharacterStatus(100, 100);
-        _context = new EnemyContext(_movement, _stateMachine);
+        _context = new EnemyContext(transform, _movement, _stateMachine, _detection, _combat);
         _stateMachine.Initialization(_context);
         _enemyUI.Initialization(_status);
     }
